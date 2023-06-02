@@ -98,6 +98,7 @@ for ($i = 0; $i < count($marks); $i++) {
     $sum_eng += $marks[$i][0];
     echo $marks[$i][0];
     echo "<br>";
+    echo "<br>";
 }
 
 $average_eng = $sum_eng / $n;
