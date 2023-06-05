@@ -1,41 +1,38 @@
 <?php
-//print_r($_GET);
-//$username = $_GET['username'];
-//$password = $_GET['password'];
+session_start();
 
-if ($username == 'admin' && $password == 'test') {
-    header('Location: http://localhost/basephp/dashboard.php');
-    exit;
-} else {
-    //echo "Username and Password Wrong";
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $username = $_POST['username'];
+    $password = $_POST['password'];
+
+    if ($username === 'admin' && $password === 'test') {
+        $_SESSION['username'] = $username;
+        header('Location: http://localhost/basephp/dashboard.php');
+        exit;
+    } else {
+        echo "Username or Password is Wrong"; 
+    }
 }
-
-//print($username);
-//print($password);
-
 ?>
 
-
 <html>
-
 <head>
 </head>
 <body>
     <div class="container">
-        <form action="">
+        <form method="POST" action="">
             <div class="field-group">
-                <label> Username </label>
-                    <input type="text" name="username"/>
+                <label>Username</label>
+                <input type="text" name="username" />
             </div>
             <div class="field-group">
-                <label> Password</label>
-                    <input type="text" name="password" />
+                <label>Password</label>
+                <input type="password" name="password" />
             </div>
             <div class="field-group">
-                
-                    <input type="submit" name="" value="login" />
+                <input type="submit" value="Login" />
             </div>
         </form>
     </div>
 </body>
-</html>            
+</html>
