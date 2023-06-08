@@ -1,233 +1,190 @@
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', 1);
 
 include 'config/db.php';
+
 $row = array(
-    'roll_num' => '',
+    'id' => '',
     'first_name' => '',
     'last_name' => '',
     'gender' => '',
     'fee' => '',
 );
 
-
-if (!empty($_GET['add'])) {
-    $add = 1;
-}
-if (!empty($_GET['edit'])) {
-    $edit = 1;
-}
 if (!empty($_GET['id'])) {
-    $id = $_GET['id'];
-}
+    $edit_id = $_GET['id'];
 
+    mysqli_select_db($conn, $dbname);
 
-if (!empty($_GET['rollnumber'])) {
-    $form_data = 1;
-    $roll_number = !empty($_GET['rollnumber']) ? $_GET['rollnumber'] : '';
-    $first_name = !empty($_GET['first_name']) ? $_GET['first_name'] : '';
-    $last_name = !empty($_GET['last_name']) ? $_GET['last_name'] : '';
-    $gender = !empty($_GET['gender']) ? $_GET['gender'] : '';
-    $fee = !empty($_GET['fee']) ? $_GET['fee'] : '';
-}
-
-
-
-
-if ($add) {
-
-    if (!empty($_GET['rollnumber'])) {
-        // Adding a new record form
-    }
-}
-
-if ($adit) {
-
-    if (!empty($_GET['rollnumber'])) {
-        // Updating a new record with form
-    }
-}
-
-
-
-
-
-if ($id) {
-
-    $sql = "select * from tbl_student where id=" . $id;
-
-
+    $sql = 'SELECT * FROM tbl_students WHERE id=' . $edit_id;
     $result = $conn->query($sql);
 
     if ($result->num_rows > 0) {
         $row = $result->fetch_assoc();
     }
-
-
 }
 
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!empty($_POST['action'])) {
+        $action = $_POST['action'];
 
-// run for add /edit form
+        if ($action === 'update') {
+            if (!empty($_POST['updateid'])) {
+                // Update existing record
+                $update_id = $_POST['updateid'];
+                $first_name = $_POST['first_name'];
+                $last_name = $_POST['last_name'];
+                $gender = $_POST['gender'];
+                $fee = $_POST['fee'];
 
-if (!empty($_GET['rollnumber'])) {
-    $roll_number = !empty($_GET['rollnumber']) ? $_GET['rollnumber'] : '';
-    $first_name = !empty($_GET['first_name']) ? $_GET['first_name'] : '';
-    $last_name = !empty($_GET['last_name']) ? $_GET['last_name'] : '';
-    $gender = !empty($_GET['gender']) ? $_GET['gender'] : '';
-    $fee = !empty($_GET['fee']) ? $_GET['fee'] : '';
-}
+                mysqli_select_db($conn, $dbname);
+                $sql = "UPDATE tbl_students SET first_name='$first_name', last_name='$last_name', gender='$gender', fee='$fee' WHERE id=$update_id";
+                $result = $conn->query($sql);
 
+                if ($result) {
+                    echo "Record Updated Successfully";
+                } else {
+                    echo "Update Failed: " . $conn->error;
+                }
+            }
+        } elseif ($action === 'add') {
+            // Add new record
+            $first_name = $_POST['first_name'];
+            $last_name = $_POST['last_name'];
+            $gender = $_POST['gender'];
+            $fee = $_POST['fee'];
 
+            mysqli_select_db($conn, $dbname);
+            $sql = "INSERT INTO tbl_students (first_name, last_name, gender, fee) VALUES ('$first_name', '$last_name', '$gender', '$fee')";
+            $result = $conn->query($sql);
 
-$sql = '';
-// Add new Record
-if (!empty($_GET['add']) && !empty($_GET['rollnumber'])) {
+            if ($result) {
+                echo "Record Added Successfully";
+            } else {
+                echo "Add Failed: " . $conn->error;
+            }
+        } elseif ($action === 'delete') {
+            if (!empty($_POST['deleteid'])) {
+                // Delete record
+                $delete_id = $_POST['deleteid'];
 
-    $sql = "insert into tbl_student (roll_num, first_name, last_name, gender, fee) Values ('" . $roll_number . "','" . $first_name . "','" . $last_name . "','" . $gender . "','" . $fee . "')";
-} elseif (!empty($_GET['edit'])) {
+                mysqli_select_db($conn, $dbname);
+                $sql = "DELETE FROM tbl_students WHERE id=$delete_id";
+                $result = $conn->query($sql);
 
-    $sql = "update tbl_student SET first_name='" . $first_name . "', last_name='" . $last_name . "', gender='" . $gender . "', fee='" . $fee . "' where id=" . $update_id;
-}
-
-if ($sql) {
-    $result = $conn->query($sql);
-    if (!empty($_GET['add']) && $result) {
-        $id = $conn->insert_id;
-
-        echo "Added Succefully";
-    } elseif (!empty($_GET['edit']) && $result) {
-        $id = $_GET['id'];
-        echo "Updated Succesfully";
+                if ($result) {
+                    echo "Record Deleted Successfully";
+                } else {
+                    echo "Delete Failed: " . $conn->error;
+                }
+            }
+        }
     }
-} else {
-    //dashboard edit link
-    $id = !empty($_GET['id']) ? $_GET['id'] : '';
 }
-
-// read data
-
-
-if ($id) {
-
-    $sql = "select * from tbl_student where id=" . $id;
-
-
-    $result = $conn->query($sql);
-
-    if ($result->num_rows > 0) {
-        $row = $result->fetch_assoc();
-    }
-
-
-}
-
-
-
-
-
-
-
-
-
 ?>
 
 <!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]>      <html class="no-js"> <!--<![endif]-->
 <html>
-
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title></title>
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets\css\style.css">
 </head>
-
 <body>
-
     <div class="container">
-
         <div class="menu">
             <div class="user">
-                <div class="username">
-
-
+                <div class="Username">
+                    <!-- Placeholder for displaying the username -->
+                    <?php echo isset($edit_id) ? $edit_id : ''; ?>
                 </div>
                 <div class="logout">
-                    <a href="http://localhost/basephp/index.">Logout</a>
+                    <a href="http://localhost/basephp/index.html">Logout</a>
                 </div>
             </div>
-
         </div>
-
         <div class="content">
-
-            <form>
+            <form method="POST" action="<?php echo $_SERVER['PHP_SELF']; ?>">
                 <div class="field-group">
-                    <lable>Roll Number</label>
-                        <input type="text" name="rollnumber" value="<?php echo $row['roll_num']; ?>" />
+                    <label>First Name</label>
+                    <input type="text" name="first_name" value="<?php echo $row['first_name']; ?>"/>
                 </div>
-
                 <div class="field-group">
-                    <lable>First Name</label>
-                        <input type="text" name="first_name" value="<?php echo $row['first_name']; ?>" />
+                    <label>Last Name</label>
+                    <input type="text" name="last_name" value="<?php echo $row['last_name']; ?>"/>
                 </div>
-
                 <div class="field-group">
-                    <lable>Last Name</label>
-                        <input type="text" name="last_name" value="<?php echo $row['last_name']; ?>" />
+                    <label>Gender</label>
+                    <input type="text" name="gender" value="<?php echo $row['gender']; ?>" />
                 </div>
-
                 <div class="field-group">
-                    <lable>Gender</label>
-                        <input type="text" name="gender" value="<?php echo $row['gender']; ?>" />
-                </div>
-
-                <div class="field-group">
-                    <lable>Fee</label>
-                        <input type="text" name="fee" value="<?php echo $row['fee']; ?>" />
+                    <label>Fee</label>
+                    <input type="text" name="fee" value="<?php echo $row['fee']; ?>"/>
                 </div>
 
                 <br><br><br>
 
                 <div class="field-group ib">
-                    <?php
-                    if (!empty($_GET['id'])) {
-                        ?>
-                        <input type="hidden" name="id" value="<?php echo $row['id']; ?>" />
-                        <input type="hidden" name="edit" value="1" />
+                    <?php if (isset($edit_id)): ?>
+                        <input type="hidden" name="updateid" value="<?php echo $edit_id; ?>" />
+                        <input type="hidden" name="action" value="update" />
                         <input type="submit" value="Update">
-                        <?php
-                    } else {
-                        ?>
+                    <?php else: ?>
+                        <input type="hidden" name="action" value="add" />
+                        <input type="submit" name="add" value="Add">
+                    <?php endif; ?>
 
-                        <input type="hidden" name="add" value="1">
-                        <input type="submit" value="Add">
-
-                        <?php
-                    }
-
-                    ?>
+                    <a class="btn" href="dashboard.php">Go to dashboard</a>
                 </div>
-
-                <div class="field-group ib">
-                    <a class="btn btn-default" href="dashboard.php">Goto Dashboard</a>
-                </div>
-
             </form>
 
+            <table>
+                <thead>
+                    <tr>
+                        <th>ID</th>
+                        <th>First Name</th>
+                        <th>Last Name</th>
+                        <th>Gender</th>
+                        <th>Fee</th>
+                        <th>Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <?php
+                    mysqli_select_db($conn, $dbname);
+                    $sql = 'SELECT * FROM tbl_students';
+                    $result = $conn->query($sql);
+
+                    if ($result->num_rows > 0) {
+                        while ($row = $result->fetch_assoc()) {
+                            echo "<tr>";
+                            echo "<td>" . $row['id'] . "</td>";
+                            echo "<td>" . $row['first_name'] . "</td>";
+                            echo "<td>" . $row['last_name'] . "</td>";
+                            echo "<td>" . $row['gender'] . "</td>";
+                            echo "<td>" . $row['fee'] . "</td>";
+                            echo "<td>
+                                <form method='POST' action='".$_SERVER['PHP_SELF']."'>
+                                    <input type='hidden' name='deleteid' value='".$row['id']."' />
+                                    <input type='hidden' name='action' value='delete' />
+                                    <input type='submit' value='Delete' onclick=\"return confirm('Are you sure you want to delete this record?');\">
+                                </form>
+                            </td>";
+                            echo "</tr>";
+                        }
+                    } else {
+                        echo "<tr><td colspan='6'>No records found</td></tr>";
+                    }
+                    ?>
+                </tbody>
+            </table>
         </div>
-
-
     </div>
-    <!--[if lt IE 7]>
-            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="#">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-
-    <script src="" async defer></script>
 </body>
-
 </html>
+                    <!--[if lt IE 7]>
+

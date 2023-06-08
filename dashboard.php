@@ -46,6 +46,11 @@ $result = $conn->query($sql);
             </div>
         </div>
         <div class="content">
+            <div class="cnotrols">
+                <a class="btn btn-default" href="edit.php?add=1"> Add New </a>
+            </div>
+            <br>
+
             <table>
             <?php
 
@@ -71,6 +76,12 @@ $result = $conn->query($sql);
                         </td>
                         <td>
                             <?php echo $row['fee']; ?>
+                        </td>
+                        <td>
+                            <a href="http://localhost/basephp/edit.php?id=<?php echo $row['id'];?>">Edit</a>
+                        </td>
+                        <td>
+                            <a href="">Delete</a>
                         </td>
                     </tr>
 

@@ -1,53 +1,106 @@
-body{
+body {
     clear: both;
-    margin: 0px;
-    padding: 0px;
-}
-
-.menu{
+    margin: 0;
+    padding: 0;
+  }
+  
+  .menu {
     height: 60px;
     background: grey;
-    .user{
-        width: 100px;
-        float: right;
-        color: black;
-    }
-}
-.content{
-    width: 60%;
-    margin: 0 auto;
-    padding-top: 200px;
+  }
+  
+  .menu .user {
+    width: 100px;
+    float: right;
+    color: black;
+  }
+  
+  .content {
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    flex-direction: column; /* Change flex direction to column */
+    align-items: flex-start;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh; /* Added height to center vertically */
     td{
-        border-bottom: 1px solid black ;
+        border: 1px solid black;
+        background: grey;
     }
-}
-@primary-color: #007bff;
-@secondary-color: #6c757d;
-
-.content {
-  width: 100%;
-  border-collapse: collapse;
-  font-family: Arial, sans-serif;
-  color: @secondary-color;
-  margin-bottom: 20px;
-
-  th {
-    background-color: @primary-color;
-    color: #fff;
+  }
+  
+ 
+  .btn {
+    padding: 5px 10px;
+    background: green;
+    color: white;
+    text-decoration: none;
+  }
+  
+  .btn:default {
+    background: green;
+    color: aliceblue;
+  }
+  
+  .ib {
+    display: inline-block;
+  }
+  
+  /* Table Styling */
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  table th,
+  table td {
     padding: 10px;
     text-align: left;
+    border-bottom: 1px solid #ccc;
   }
-
-  td {
-    border: 1px solid @secondary-color;
-    padding: 10px;
+  
+  table th {
+    background-color: black;
+    color: #fff;
   }
-
-  tr:nth-child(even) {
-    background-color: #f2f2f2;
+  
+  .field-group {
+    margin-bottom: 10px;
   }
-
-  tr:hover {
-    background-color: #e0e0e0;
+  .field-group .ib{
+    margin-bottom: 10px;
   }
-}
+  
+  input[type="text"] {
+    width: 100%;
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 3px;
+  }
+  
+  input[type="submit"] {
+    padding: 5px 10px;
+    background-color: grey;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+  }
+  
+  a.btn {
+    display: inline-block;
+    padding: 5px 10px;
+    margin-left: 10px;
+    background-color: #007bff;
+    color: #fff;
+    text-decoration: none;
+  }
+  
+  .logout a {
+    color: white;
+    text-decoration: none;
+  }
+  
+  .logout a:hover {
+    text-decoration: underline;
+  }
+  
